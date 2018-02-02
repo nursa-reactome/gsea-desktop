@@ -17,5 +17,5 @@ Prepare the jar file as follows:
            -DgroupId=edu.mit.broad -DartifactId=gsea-reactome
            -Dversion=<version> -Dpackaging=jar
 
-   where <version> is the generated jar version.
+   where `<version>` is the generated jar version.
  
