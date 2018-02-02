@@ -2,7 +2,7 @@
 <!--
   Copyright (c) 2003-2016 Broad Institute, Inc., Massachusetts Institute of Technology, and Regents of the University of California.  All rights reserved.
 -->
-<project name="GSEA" default="build-gsea" basedir=".">
+<project name="GSEA" default="build-gsea-reactome" basedir=".">
   <taskdef resource="proguard/ant/task.properties" classpath="lib.build/proguard.jar" />
 
   <!-- GLOBAL VARS -->
@@ -11,6 +11,7 @@
   <property file="src/edu/mit/broad/genome/resources/build.properties" />
   <property name="ALL_DEPS_JAR" value="gsea_all_deps-${build.version}.jar" />
   <property name="CLEANED_JAR" value="gsea-${build.version}.jar" />
+  <property name="REACTOME_JAR" value="gsea-reactome-${build.major}.${build.minor}.jar" />
 
   <target name="-init">
     <!-- Create the time stamp -->
@@ -69,6 +70,35 @@
       </manifest>
     </jar>
 
+  </target>
+
+  <!-- makes the unoptimized Reactome GSEA jar file -->
+  <target name="reactome-jar-gsea" depends="-init, clean, compile-gsea, copy-resources" description="Builds single (unoptimized) JAR for GSEA use in Reactome">
+  
+    <jar basedir="${dist.dir}/classes" defaultexcludes="true" jarfile="${dist.dir}/just_internal.jar" />
+  
+    <jar destfile="${dist.dir}/tmp.jar">
+      <zipgroupfileset dir="lib">
+        <include name="*.jar" />
+        <exclude name="log4j*.jar" />
+        <exclude name="commons-logging*.jar" />
+        <exclude name="http*.jar" />
+      </zipgroupfileset>
+  
+      <zipgroupfileset dir="${dist.dir}" includes="just_internal.jar" />
+    </jar>
+  
+    <jar destfile="${dist.dir}/unoptimized.jar">
+      <zipfileset src="${dist.dir}/tmp.jar" excludes="META-INF/**, README.txt, COPYING.txt">
+      </zipfileset>
+      <fileset file="LICENSE.txt" />
+      <fileset file="LICENSE-3RD-PARTY.txt" />
+      <manifest>
+        <attribute name="Built-By" value="${user.name}" />
+        <attribute name="GSEA-Build-Date" value="${TODAY}" />
+      </manifest>
+    </jar>
+
     <!-- clean up just_internal.jar and tmp.jar file -->
     <delete file="${dist.dir}/just_internal.jar" failonerror="false" />
     <delete file="${dist.dir}/tmp.jar" failonerror="false" />
@@ -89,5 +119,22 @@
       <libraryjar path="${java.home}/lib/ext" jarfilter="*.jar" />
       <configuration file="lib.build/proguard_opt.cfg" />
     </proguard>
+  </target>
+
+  <target name="build-gsea-reactome" depends="reactome-jar-gsea" description="Optimize GSEA Reactome jar by removing unused classes and resources">
+    <mkdir dir="${proguard_opt_hist.dir}" />
+    <proguard printusage="${proguard_opt_hist.dir}/proguard_opt_log_${time.stamp}.txt">
+      <injar path="${dist.dir}/unoptimized.jar" />
+      <outjar path="${dist.dir}/${REACTOME_JAR}" />
+      <libraryjar path="${java.home}/lib/rt.jar" />
+      <libraryjar path="${java.home}/lib/charsets.jar" />
+      <libraryjar path="${java.home}/lib/jce.jar" />
+      <libraryjar path="${java.home}/lib/jfr.jar" />
+      <libraryjar path="${java.home}/lib/jsse.jar" />
+      <libraryjar path="${java.home}/lib/resources.jar" />
+      <libraryjar path="${java.home}/lib/ext" jarfilter="*.jar" />
+      <configuration file="lib.build/proguard_opt.cfg" />
+    </proguard>
+    <delete file="${dist.dir}/unoptimized.jar" failonerror="false" />
   </target>
 </project>
