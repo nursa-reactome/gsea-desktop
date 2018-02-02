@@ -40,7 +40,7 @@ public class XLogger {
 
 
         CLICK_AND_BROWSE_LAYOUT = new MyPatternLayout("%-4r [%-5p] %m\tat %c.%M(%F:%L)\n");    // IDE click-and-browsable format
-        BasicConfigurator.configure(new ConsoleAppender(CLICK_AND_BROWSE_LAYOUT, ConsoleAppender.SYSTEM_OUT));
+        BasicConfigurator.configure();
 
     }
 
@@ -79,7 +79,7 @@ public class XLogger {
     protected void finalize() throws Throwable {
         super.finalize();
         System.out.println("Finalizing XLogger -- removing all appenders");
-        Logger.getRootLogger().removeAllAppenders();    // so that ports (if any) shut down ok
+        //Logger.getRootLogger().removeAllAppenders();    // so that ports (if any) shut down ok
     }
 
     /**
@@ -91,7 +91,7 @@ public class XLogger {
     public static class MyPatternLayout extends PatternLayout {
 
         public MyPatternLayout() {
-            this(DEFAULT_CONVERSION_PATTERN);
+            super();
         }
 
         public MyPatternLayout(String pattern) {
@@ -100,21 +100,7 @@ public class XLogger {
 
         public String format(LoggingEvent le) {
 
-            if (SystemUtils.isPropertyDefined("XSERVLET")) {
-                return le.getRenderedMessage();
-            }
-
-            if (Conf.isDebugMode()) {
-                return super.format(le);
-            } else {
-                // dont like the stack trace thing for info loggings
-                if (le.getLevel() == Level.INFO) {
-                    String s = Long.toString(le.timeStamp);
-                    return new StringBuffer(s.substring(s.length() - 4, s.length())).append(" [INFO ] ").append(le.getMessage().toString()).append('\n').toString();
-                } else {
-                    return super.format(le);
-                }
-            }
+            return "Logging disabled";
         }
 
     }    // End MyPatternLayout

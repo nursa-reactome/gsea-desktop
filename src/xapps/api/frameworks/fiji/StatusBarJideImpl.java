@@ -11,7 +11,10 @@ import edu.mit.broad.genome.JarResources;
 import edu.mit.broad.genome.XLogger;
 import edu.mit.broad.genome.viewers.SystemConsoleViewer;
 import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
+import org.apache.log4j.spi.ErrorHandler;
+import org.apache.log4j.spi.Filter;
 import org.apache.log4j.spi.LoggingEvent;
 
 import javax.swing.*;
@@ -137,26 +140,26 @@ public class StatusBarJideImpl extends AppenderSkeleton implements edu.mit.broad
 
     public void append(final LoggingEvent event) {
 
-        String txt = XLogger.getSimpleLayout().format(event);
-
-        Level level = event.getLevel();
-
-
-        if (level == Level.INFO) {
-            fStatusBarLabelItem.setForeground(Color.BLACK);
-            fStatusBarLabelItem.setText(txt);
-        } else if (level == Level.DEBUG && Conf.isDebugMode()) {
-            fStatusBarLabelItem.setForeground(Color.DARK_GRAY);
-            fStatusBarLabelItem.setText(txt);
-        } else if (level == Level.WARN) {
-            fStatusBarLabelItem.setForeground(Color.ORANGE);
-            fStatusBarLabelItem.setText(txt);
-        } else if (level == Level.FATAL || level == Level.ERROR) {
-            // @note dont show it scares people
-            // /fStatusBarLabelItem.setForeground(Color.RED);
-            //fStatusBarLabelItem.setForeground(Color.RED);
-            //fStatusBarLabelItem.setText(txt);
-        }
+//        String txt = XLogger.getSimpleLayout().format(event);
+//
+//        Level level = event.getLevel();
+//
+//
+//        if (level == Level.INFO) {
+//            fStatusBarLabelItem.setForeground(Color.BLACK);
+//            fStatusBarLabelItem.setText(txt);
+//        } else if (level == Level.DEBUG && Conf.isDebugMode()) {
+//            fStatusBarLabelItem.setForeground(Color.DARK_GRAY);
+//            fStatusBarLabelItem.setText(txt);
+//        } else if (level == Level.WARN) {
+//            fStatusBarLabelItem.setForeground(Color.ORANGE);
+//            fStatusBarLabelItem.setText(txt);
+//        } else if (level == Level.FATAL || level == Level.ERROR) {
+//            // @note dont show it scares people
+//            // /fStatusBarLabelItem.setForeground(Color.RED);
+//            //fStatusBarLabelItem.setForeground(Color.RED);
+//            //fStatusBarLabelItem.setText(txt);
+//        }
 
         /*
         fLogObjects.add(txt);
@@ -172,6 +175,48 @@ public class StatusBarJideImpl extends AppenderSkeleton implements edu.mit.broad
 
     public boolean requiresLayout() {
         return false;
+    }
+
+    @Override
+    public void addFilter(Filter newFilter) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public Filter getFilter() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void clearFilters() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void doAppend(LoggingEvent event) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public ErrorHandler getErrorHandler() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Layout getLayout() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 } // End class StatusBarJideImpl

@@ -41,8 +41,8 @@ public class SystemConsole extends JTextArea {
                 System.setErr(ps);
 
                 //Layout layout = new MyPatternLayout();
-                Layout layout = new SimpleLayout();
-                BasicConfigurator.configure(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
+                //Layout layout = new SimpleLayout();
+                BasicConfigurator.configure();
 
                 startConsoleReaderThread(ls.getInputStream());
                 //startConsoleReaderThread(System.out);
